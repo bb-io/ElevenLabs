@@ -6,7 +6,7 @@
         <Nullable>enable</Nullable>
         <Product>ElevenLabs</Product>
         <Description>AI Voice Generator and Text to Speech</Description>
-        <Version>1.0.1</Version>
+        <Version>1.1.0</Version>
         <AssemblyName>Apps.ElevenLabs</AssemblyName>
     </PropertyGroup>
 
