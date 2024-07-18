@@ -1,8 +1,8 @@
 using Blackbird.Applications.Sdk.Common.Files;
 
-namespace Apps.ElevenLabs.Models.Response;
+namespace Apps.ElevenLabs.Models;
 
-public class FileResponse
+public class FileModel
 {
     public FileReference File { get; set; }
 }
