@@ -12,6 +12,7 @@ using RestSharp;
 
 namespace Apps.ElevenLabs.Actions;
 
+[ActionList]
 public class AudioActions : ElevenLabsInvocable
 {
     private readonly IFileManagementClient _fileManagementClient;
