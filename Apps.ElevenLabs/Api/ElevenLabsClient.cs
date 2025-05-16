@@ -1,5 +1,6 @@
 using Apps.ElevenLabs.Constants;
 using Apps.ElevenLabs.Models;
+using Blackbird.Applications.Sdk.Common.Exceptions;
 using Blackbird.Applications.Sdk.Utils.Extensions.String;
 using Blackbird.Applications.Sdk.Utils.RestSharp;
 using Newtonsoft.Json;
@@ -21,6 +22,6 @@ public class ElevenLabsClient : BlackBirdRestClient
     protected override Exception ConfigureErrorException(RestResponse response)
     {
         var error = JsonConvert.DeserializeObject<ErrorResponse>(response.Content!)!;
-        return new(error.Detail?.Message ?? response.Content);
+        throw new PluginApplicationException(error.Detail?.Message ?? response.Content);
     }
 }

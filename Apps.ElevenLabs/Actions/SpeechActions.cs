@@ -11,6 +11,7 @@ using Blackbird.Applications.Sdk.Common.Invocation;
 using Blackbird.Applications.SDK.Extensions.FileManagement.Interfaces;
 using Blackbird.Applications.Sdk.Utils.Extensions.Http;
 using RestSharp;
+using Blackbird.Applications.Sdk.Common.Exceptions;
 
 namespace Apps.ElevenLabs.Actions;
 
@@ -31,7 +32,7 @@ public class SpeechActions : ElevenLabsInvocable
     {
         if ((input.Text is null && input.File is null) || (input.Text is not null && input.File is not null))
         {
-            throw new("You should provide one input: Text or File");
+            throw new PluginMisconfigurationException("You should provide one input: Text or File");
         }
 
         var text = input.File is not null ? await GetFileText(input.File) : input.Text!;
