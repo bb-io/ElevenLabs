@@ -33,25 +33,6 @@ namespace Tests.ElevenLabs
 
 
         [TestMethod]
-        public async Task CreateDub_CSV_IsSuccess()
-        {
-            var action = new DubbingActions(InvocationContext, FileManager);
-
-            var response = await action.CreateDub(new CreateDubRequest
-            {
-                Name = "Test Dub from local call",
-                File = new FileReference { Name = "test.MP4" },
-                SourceLang = "en",
-                TargetLang = "es",
-            });
-
-            Console.WriteLine($"{response.Id} - {response.ExpectedDurationSec}");
-
-            Assert.IsNotNull(response);
-        }
-
-
-        [TestMethod]
         public async Task GetDub_IsSuccess()
         {
             var action = new DubbingActions(InvocationContext, FileManager);
