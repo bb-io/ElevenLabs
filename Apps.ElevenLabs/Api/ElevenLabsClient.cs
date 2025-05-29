@@ -24,4 +24,16 @@ public class ElevenLabsClient : BlackBirdRestClient
         var error = JsonConvert.DeserializeObject<ErrorResponse>(response.Content!)!;
         throw new PluginApplicationException(error.Detail?.Message ?? response.Content);
     }
+
+    public override async Task<T> ExecuteWithErrorHandling<T>(RestRequest request)
+    {
+        string content = (await ExecuteWithErrorHandling(request)).Content;
+        T val = JsonConvert.DeserializeObject<T>(content, JsonSettings);
+        if (val == null)
+        {
+            throw new Exception($"Could not parse {content} to {typeof(T)}");
+        }
+
+        return val;
+    }
 }
