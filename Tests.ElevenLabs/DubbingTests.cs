@@ -1,5 +1,6 @@
 ﻿using Apps.ElevenLabs.Actions;
 using Apps.ElevenLabs.Models.Request.Dub;
+using Apps.ElevenLabs.Models.Request.Speech;
 using Blackbird.Applications.Sdk.Common.Files;
 using Newtonsoft.Json;
 using System;
@@ -65,6 +66,32 @@ namespace Tests.ElevenLabs
 
             var response = await action.DownloadDubFile(new DubbingRequest { DubId = "f2pZOuTcA4eTDuMmEOxU" },
                 new DubbingOptionsRequest { });
+
+            Assert.IsNotNull(response);
+        }
+
+
+        [TestMethod]
+        public async Task ConvertTextToSpeach_IsSuccess()
+        {
+            var action = new SpeechActions(InvocationContext, FileManager);
+
+            var response = await action.TextToSpeech(new VoiceRequest { VoiceId = "EXAVITQu4vr4xnSDxMaL" },
+                new TextToSpeechInput { Text="Hello my dear friend how are you?",
+                LanguageCode = "en",
+                Stability =0.6,
+                UseSpeakerBoost=true,
+                SimilarityBoost=1,
+                ModelId= "eleven_flash_v2_5",
+                Style=1,
+                Speed=1.2,
+                ApplyTextNormalization="auto",
+                //ApplyLanguageTextNormalization = true
+                });
+
+        
+            var resultJson = JsonConvert.SerializeObject(response, Formatting.Indented);
+            Console.WriteLine(resultJson);
 
             Assert.IsNotNull(response);
         }
