@@ -15,17 +15,9 @@ using Blackbird.Applications.Sdk.Common.Exceptions;
 
 namespace Apps.ElevenLabs.Actions;
 
-[ActionList]
-public class SpeechActions : ElevenLabsInvocable
+[ActionList("Speech")]
+public class SpeechActions(InvocationContext invocationContext, IFileManagementClient fileManagementClient) : ElevenLabsInvocable(invocationContext)
 {
-    private readonly IFileManagementClient _fileManagementClient;
-
-    public SpeechActions(InvocationContext invocationContext, IFileManagementClient fileManagementClient) : base(
-        invocationContext)
-    {
-        _fileManagementClient = fileManagementClient;
-    }
-
     [Action("Convert text to speech", Description = "Convert provided text to a speech with selected settings")]
     public async Task<FileModel> TextToSpeech([ActionParameter] VoiceRequest voice,
         [ActionParameter] TextToSpeechInput input)
@@ -45,7 +37,7 @@ public class SpeechActions : ElevenLabsInvocable
 
         return new()
         {
-            File = await _fileManagementClient.UploadAsync(new MemoryStream(response.RawBytes), "audio/mpeg",
+            File = await fileManagementClient.UploadAsync(new MemoryStream(response.RawBytes), "audio/mpeg",
                 $"{voice.VoiceId}.mp3")
         };
     }
@@ -57,7 +49,7 @@ public class SpeechActions : ElevenLabsInvocable
         var endpoint = $"speech-to-speech/{voice.VoiceId}";
         var request = new ElevenLabsRequest(endpoint, Method.Post, Creds);
 
-        var fileStream = await _fileManagementClient.DownloadAsync(file.File);
+        var fileStream = await fileManagementClient.DownloadAsync(file.File);
        
         request.AddParameter("model_id", stsModel.ModelId);
         request.AddFile("audio", () => fileStream, file.File.Name);
@@ -67,14 +59,14 @@ public class SpeechActions : ElevenLabsInvocable
         
         return new()
         {
-            File = await _fileManagementClient.UploadAsync(new MemoryStream(response.RawBytes), "audio/mpeg",
+            File = await fileManagementClient.UploadAsync(new MemoryStream(response.RawBytes), "audio/mpeg",
                 $"{voice.VoiceId}.mp3")
         };
     }
 
     private async Task<string> GetFileText(FileReference file)
     {
-        var stream = await _fileManagementClient.DownloadAsync(file);
+        var stream = await fileManagementClient.DownloadAsync(file);
         return await new StreamReader(stream).ReadToEndAsync();
     }
 }
