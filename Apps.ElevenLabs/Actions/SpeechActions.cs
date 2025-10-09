@@ -15,7 +15,7 @@ using Blackbird.Applications.Sdk.Common.Exceptions;
 
 namespace Apps.ElevenLabs.Actions;
 
-[ActionList]
+[ActionList("Speech")]
 public class SpeechActions(InvocationContext invocationContext, IFileManagementClient fileManagementClient) : ElevenLabsInvocable(invocationContext)
 {
     [Action("Convert text to speech", Description = "Convert provided text to a speech with selected settings")]
