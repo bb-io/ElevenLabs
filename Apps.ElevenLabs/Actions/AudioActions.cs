@@ -12,17 +12,9 @@ using RestSharp;
 
 namespace Apps.ElevenLabs.Actions;
 
-[ActionList]
-public class AudioActions : ElevenLabsInvocable
+[ActionList("Audio")]
+public class AudioActions(InvocationContext invocationContext, IFileManagementClient fileManagementClient) : ElevenLabsInvocable(invocationContext)
 {
-    private readonly IFileManagementClient _fileManagementClient;
-
-    public AudioActions(InvocationContext invocationContext, IFileManagementClient fileManagementClient) : base(
-        invocationContext)
-    {
-        _fileManagementClient = fileManagementClient;
-    }
-
     [Action("Generate sound", Description = "Generate a sound from the provided text")]
     public async Task<FileModel> GenerateAudio([ActionParameter] GenerateSoundRequest input)
     {
@@ -33,7 +25,7 @@ public class AudioActions : ElevenLabsInvocable
 
         return new()
         {
-            File = await _fileManagementClient.UploadAsync(new MemoryStream(response.RawBytes), "audio/mpeg",
+            File = await fileManagementClient.UploadAsync(new MemoryStream(response.RawBytes), "audio/mpeg",
                 $"sound-{DateTime.Now.Ticks}.mp3")
         };
     }
@@ -41,7 +33,7 @@ public class AudioActions : ElevenLabsInvocable
     [Action("Isolate audio", Description = "Remove background noise from audio")]
     public async Task<FileModel> IsolateAudio([ActionParameter] FileModel input)
     {
-        var fileStream = await _fileManagementClient.DownloadAsync(input.File);
+        var fileStream = await fileManagementClient.DownloadAsync(input.File);
 
         var request = new ElevenLabsRequest("audio-isolation", Method.Post, Creds)
             .AddFile("audio", () => fileStream, input.File.Name);
@@ -51,7 +43,7 @@ public class AudioActions : ElevenLabsInvocable
 
         return new()
         {
-            File = await _fileManagementClient.UploadAsync(new MemoryStream(response.RawBytes), "audio/mpeg",
+            File = await fileManagementClient.UploadAsync(new MemoryStream(response.RawBytes), "audio/mpeg",
                 input.File.Name)
         };
     }
